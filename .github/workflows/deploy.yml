@@ -19,7 +19,7 @@ jobs:
         node-version: '22.5.1'
 
     - name: Install dependencies
-      run: npm install          
+      run: npm install              
 
     - name: Deploy to VM
       env:
@@ -27,10 +27,7 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       run: |
-        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-        ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        scp -i /dev/null -r ./ azureuser@$48.217.250.5:/home/azureuser/test 
-        ssh -i /dev/null $SSH_USERNAME@$SSH_HOST "
+        ssh -i $SSH_PRIVATE_KEY $SSH_USERNAME@$SSH_HOST "
           cd /home/azureuser/test
           npm install
           pm2 startOrReload ecosystem.config.js --env production
